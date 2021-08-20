@@ -7,6 +7,11 @@ export interface Meta {
   totalCount: number;
 }
 
-export interface DocumentData {
-  storeNumber: string;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface DocumentData{
+
+}
+
+export interface QuerySnapshot<DocumentData> {
+  DocumentData: DocumentData;
 }

@@ -72,7 +72,7 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-btn :icon="$q.dark.isActive ? 'far fa-sun' : 'far fa-moon' " @click="$q.dark.toggle()"></q-btn> <span class="text-weight-medium text-secondary" style="margin-left:20px;">Dark Mode</span>
+          <q-btn :icon="$q.dark.isActive ? 'far fa-sun' : 'far fa-moon' " @click="$q.dark.toggle()"></q-btn> <span class="text-weight-medium text-secondary" style="margin-left:20px;">{{darkModeString}}</span>
         </q-card-section>
 
         <q-card-actions align="right" class="text-accent">
@@ -138,6 +138,11 @@ export default defineComponent({
       void this.$router.push({
         path: '/'
       });
+    }
+  },
+  computed: {
+    darkModeString: function () {
+      return this.$q.dark.isActive ? 'Too spooky, turn on the lights!' : 'Dark Mode';
     }
   }
 });

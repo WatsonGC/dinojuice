@@ -63,7 +63,7 @@ export default defineComponent({
   methods: {
     AddStore (storeNumber: any) {
       debugger;
-      db.collection('StoreNumbers').add(this.storeNumber as DocumentData).then(() => {
+      db.collection('StoreNumbers').add(storeNumber as DocumentData).then(() => {
         alert('store successfully created!');
         this.storeNumber.storeNumber = '';
       }).catch((error: any) => {

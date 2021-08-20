@@ -3,8 +3,8 @@
     <div>
       <transition
           appear
-          enter-active-class="animated bounceInDown slow"
-          leave-active-class="animated bounceOutLeft slow"
+          enter-active-class="animated bounceInDown slower"
+          leave-active-class="animated bounceOutLeft slower"
           >
       <div style="font-size: 30vh">
         Meteor strike
@@ -32,13 +32,9 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'Error404'
+  name: 'Delivery404'
 });
 </script>
 
 <style lang="scss">
-.slow {
-    -webkit-animation-duration : 100;
-    animation-duration: 100;
-  }
 </style>
