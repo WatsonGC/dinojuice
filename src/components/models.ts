@@ -15,3 +15,7 @@ export interface DocumentData{
 export interface QuerySnapshot<DocumentData> {
   DocumentData: DocumentData;
 }
+
+export interface desktopMode{
+  
+}

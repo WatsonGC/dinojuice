@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated bordered>
@@ -74,6 +75,9 @@
         <q-card-section class="q-pt-none">
           <q-btn :icon="$q.dark.isActive ? 'far fa-sun' : 'far fa-moon' " @click="$q.dark.toggle()"></q-btn> <span class="text-weight-medium text-secondary" style="margin-left:20px;">{{darkModeString}}</span>
         </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-btn :icon="this.desktopMode ? 'fas fa-mobile' : 'fas fa-desktop' " @click="forceDesktopMode(this.desktopMode)"></q-btn> <span class="text-weight-medium text-secondary" style="margin-left:20px;">{{forceDesktopModeString}}</span>
+        </q-card-section>
 
         <q-card-actions align="right" class="text-accent">
           <transition
@@ -109,7 +113,8 @@ const linksList = [
   }
 ];
 
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
+import { db } from 'src/boot/firebase';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -123,7 +128,8 @@ export default defineComponent({
       leftDrawerOpen: false,
       essentialLinks: linksList,
       settingsDialog: false,
-      miniState: false
+      miniState: false,
+      desktopMode: false
     };
   },
 
@@ -138,13 +144,27 @@ export default defineComponent({
       void this.$router.push({
         path: '/'
       });
+    },
+    forceDesktopMode (desktopMode: boolean) {
+      if (this.desktopMode === false) { this.desktopMode = true; } else { this.desktopMode = false; }
+      void db.collection('forceDesktopMode').doc('toggle').update({
+        desktopMode
+      });
     }
   },
   computed: {
     darkModeString: function () {
       return this.$q.dark.isActive ? 'Too spooky, turn on the lights!' : 'Dark Mode';
+    },
+    forceDesktopModeString (): string {
+      return this.desktopMode ? 'Mobile Responsive Mode' : 'Force Desktop Mode';
     }
-  }
+  },
+  provide () {
+    return {
+      desktopMode: computed(() => this.desktopMode)
+    };
+  },
 });
 </script>
 

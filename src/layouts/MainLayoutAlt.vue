@@ -114,6 +114,6 @@ export default defineComponent({
     toggleLeftDrawer () {
       this.leftDrawerOpen = !this.leftDrawerOpen;
     }
-  }
+  },
 });
 </script>

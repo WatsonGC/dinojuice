@@ -3,6 +3,7 @@
 <div class="q-pa-md">
   <q-toggle v-model="loading" label="Loading state" class="q-mb-md" />
     <q-table
+      :grid="($q.screen.xs && desktopMode.value === true)"
       title="Delivery Data"
       :rows="rows"
       :columns="columns"
@@ -65,6 +66,7 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'History',
+  inject: ['desktopMode'],
   data () {
     return {
       rows: [] as unknown[],
@@ -149,7 +151,8 @@ export default defineComponent({
       loading: false,
       pagination: {
         rowsPerPage: 10
-      }
+      },
+      //desktopMode: [] as unknown[]
     };
   },
   created () {
@@ -160,6 +163,13 @@ export default defineComponent({
         this.rows.push(doc.data());
       });
     });
+    // db.collection('forceDesktopMode').onSnapshot((snapshotChange: QuerySnapshot<DocumentData>) => {
+    //   this.desktopMode = [];
+
+    //   snapshotChange.docs.forEach((doc) => {
+    //     this.desktopMode.push(doc.data());
+    //   });
+    // });
   },
 });
 </script>
