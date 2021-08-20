@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 <template>
   <q-page class="row items-center justify-evenly">
-    <example-component
+    <!-- <example-component
       title="Example component"
       active
       :todos="todos"
@@ -15,7 +15,7 @@
           <q-btn icon="fas fa-hat-cowboy-side" @Click="AddStore(this.storeNumber)"></q-btn>
           </transition>
           <span>TEST</span>
-          <q-input v-model="storeNumber.storeNumber" />
+          <q-input v-model="storeNumber.storeNumber" /> -->
   </q-page>
 </template>
 
