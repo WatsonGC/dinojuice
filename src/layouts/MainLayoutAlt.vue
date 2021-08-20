@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Secret App
+          Secret AppALT
         </q-toolbar-title>
 
       </q-toolbar>
