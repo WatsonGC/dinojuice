@@ -14,6 +14,7 @@
           leave-active-class="animated bounceOutLeft">
           <q-btn icon="fas fa-hat-cowboy-side" @Click="AddStore(this.storeNumber)"></q-btn>
           </transition>
+          <span>TEST</span>
           <q-input v-model="storeNumber.storeNumber" />
   </q-page>
 </template>
