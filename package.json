@@ -6,6 +6,7 @@
   "author": "gwatson",
   "private": true,
   "scripts": {
+    "build": "",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
   },
