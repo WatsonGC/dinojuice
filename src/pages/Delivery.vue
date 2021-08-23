@@ -160,7 +160,7 @@
         filled
         v-model="entryForm.gross"
         label="Gross"
-        lazy-rules
+        lazy-rules="true"
         dense
         class="q-pa-sm"
         style="max-width: 200px;"
@@ -207,16 +207,16 @@
       transition-hide="rotate">
       <q-card style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">Take a Photo of the BOL</div>
+          <div class="text-h6">Would you Like to Take a Photo of the BOL?</div>
         </q-card-section>
         <div align="center" class="text-primary">
           <q-btn @click="takePhoto = true;" flat label="Take Photo" />
-          <q-btn @click="addBolToDeliveryNoPhoto(this.entryForm)" flat label="No Thanks" v-close-popup />
+          <q-btn @click="noThanksClicked = true;" flat label="No Thanks" />
           </div>
         <q-card-actions align="center" class="text-accent">
           <q-btn flat @click="takePhotoDialog = false" label="Cancel" v-close-popup />
-          <template v-if="this.photoTaken === true">
-          <q-btn flat label="Save" v-close-popup />
+          <template v-if="this.photoTaken === true || this.noThanksClicked === true">
+          <q-btn @click="addBolToDelivery(this.entryForm)" flat label="Save" v-close-popup />
           </template>
         </q-card-actions>
       </q-card>
@@ -233,13 +233,9 @@
         <div align="center" class="text-primary">
            <vue-web-cam ref="webcam" class="full-width" :selectFirstDevice="true" />
           <q-btn @click="snapPhoto" flat label="Capture" />
-          <!-- <q-btn @click="addBolToDeliveryNoPhoto(this.entryForm)" flat label="No Thanks" v-close-popup />  -->
           </div>
         <q-card-actions align="center" class="text-accent">
           <q-btn flat @click="takePhotoDialog = false" label="Cancel" v-close-popup />
-          <template v-if="this.photoTaken === true">
-          <q-btn @click="addBolToDelivery(this.entryForm)" flat label="Save" v-close-popup />
-          </template>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -266,18 +262,20 @@
           <div v-for="bol in bolList.filter(x => Object.keys(x).length !== 0)" v-bind:key="bol">
             <q-card>
               <q-card-actions>
-                <q-btn icon="fas fa-minus-circle" @click="deleteBol(bol.bolNumber)">
+                <q-btn icon="fas fa-minus-circle" color="red" @click="deleteBol(bol.bolNumber)">
                   <span class="q-pl-xs">
                   Delete this BOL
                   </span>
                 </q-btn>
               </q-card-actions>
             <q-card-section>
+              <div class="row">
               <div class="text-h6">
                 BOL # {{bol.bolNumber}} |
                 </div>
                 <div class="text-h6">
-                Has Photo {{bol.hasImage}}
+                Photo Attached {{bol.hasImage}}
+                </div>
                 </div>
                 <q-separator />
                 <div class="text-h6">
@@ -287,6 +285,7 @@
                 <div class="text-h6">
                 Driver {{bol.driverName}}
                 </div>
+                <q-separator />
                 <div class="row">
                 <div class="text-h6">
                  Carrier {{bol.carrier}} |
@@ -336,6 +335,38 @@
         style="min-height: 200px;"
       >
         Delivery In Progress
+        <div v-for="tank in begTankReadings" v-bind:key="tank">
+          <q-card>
+            <q-card-section>
+              <div class="col">
+              <q-knob
+                show-value
+                font-size="10px"
+                class="q-ma-md"
+                v-model="tank.percentFull"
+                size="80px"
+                :thickness="0.25"
+                color="primary"
+                track-color="grey-3"
+              >
+                <q-avatar size="60px">
+                  <img src="~/assets/dinojuice.png">
+                </q-avatar>
+              </q-knob>
+              </div>
+              <div class="col">
+              <span class="bottom 1-ml-xl text-subtitle2">{{tank.percentFull}}%</span>
+              </div>
+              <div class="col-2">
+               <span>Tank Number: {{tank.Tank_Number}} </span>
+              <span>Grade: {{tank.Abbr}} </span>
+              <span>Gallons: {{tank.Tank_Number}} </span>
+              <span>Ullage: {{tank.Ullage}} </span>
+              <span>Capacity: {{tank.Capacity}}</span>
+              </div>
+              </q-card-section>
+            </q-card>
+            </div>
       </q-step>
 
       <q-step
@@ -404,6 +435,8 @@ export default defineComponent({
       takePhoto: false,
       photoTaken: false,
       imagePreviewDialog: false,
+      noThanksClicked: false,
+      tankLevel: 30,
       cleanedString: '',
       entryForm: {
         bolNumber: '',
@@ -502,6 +535,133 @@ export default defineComponent({
         'Daniel Jackson',
         'Skim Beeble'
       ],
+      begTankReadings: [
+        {
+          Entry_ID: 482765075,
+          Store_Number: 366,
+          Sequence: 9997,
+          Division: 3,
+          Entry_Date_Time: '2021-08-23T16:16:38.4826592-05:00',
+          Successfull: 1,
+          Tank_Number: 1,
+          Gallons: 6956,
+          Ullage: 12825,
+          Inches: 45.81,
+          Temperature: 76.21,
+          Water: 0,
+          Capacity: 19782,
+          LowFuel1: 750,
+          LowFuel2: 2000,
+          LowFuel3: 3000,
+          LowFuel4: 4000,
+          Grade: 2,
+          Abbr: 'UNLE10',
+          EPA_Tank_ID: 2013121701,
+          Avg_Sales: 8012,
+          IsUtc: true,
+          percentFull: 35.16
+        },
+        {
+          Entry_ID: 482765076,
+          Store_Number: 366,
+          Sequence: 9997,
+          Division: 3,
+          Entry_Date_Time: '2021-08-23T16:16:38.4866490-05:00',
+          Successfull: 1,
+          Tank_Number: 2,
+          Gallons: 7113,
+          Ullage: 12668,
+          Inches: 46.55,
+          Temperature: 75.73,
+          Water: 0,
+          Capacity: 19782,
+          LowFuel1: 750,
+          LowFuel2: 2000,
+          LowFuel3: 3000,
+          LowFuel4: 4000,
+          Grade: 2,
+          Abbr: 'UNLE10',
+          EPA_Tank_ID: 2013121701,
+          Avg_Sales: 8012,
+          IsUtc: true,
+          percentFull: 35.95
+        },
+        {
+          Entry_ID: 482765077,
+          Store_Number: 366,
+          Sequence: 9997,
+          Division: 3,
+          Entry_Date_Time: '2021-08-23T16:16:38.4896407-05:00',
+          Successfull: 1,
+          Tank_Number: 3,
+          Gallons: 3401,
+          Ullage: 6079,
+          Inches: 45.91,
+          Temperature: 76.11,
+          Water: 0,
+          Capacity: 9481,
+          LowFuel1: 750,
+          LowFuel2: 2000,
+          LowFuel3: 3000,
+          LowFuel4: 4000,
+          Grade: 5,
+          Abbr: 'PREE10',
+          EPA_Tank_ID: 2013121702,
+          Avg_Sales: 1234,
+          IsUtc: true,
+          percentFull: 35.87
+        },
+        {
+          Entry_ID: 482765078,
+          Store_Number: 366,
+          Sequence: 9997,
+          Division: 3,
+          Entry_Date_Time: '2021-08-23T16:16:38.4936297-05:00',
+          Successfull: 1,
+          Tank_Number: 4,
+          Gallons: 4108,
+          Ullage: 7499,
+          Inches: 35.05,
+          Temperature: 79.41,
+          Water: 0,
+          Capacity: 11608,
+          LowFuel1: 750,
+          LowFuel2: 2000,
+          LowFuel3: 3000,
+          LowFuel4: 4000,
+          Grade: 13,
+          Abbr: 'DSL',
+          EPA_Tank_ID: 2013121703,
+          Avg_Sales: 642,
+          IsUtc: true,
+          percentFull: 35.38
+        },
+        {
+          Entry_ID: 482765079,
+          Store_Number: 366,
+          Sequence: 9997,
+          Division: 3,
+          Entry_Date_Time: '2021-08-23T16:16:38.4966222-05:00',
+          Successfull: 1,
+          Tank_Number: 5,
+          Gallons: 1239,
+          Ullage: 9181,
+          Inches: 22.34,
+          Temperature: 75.87,
+          Water: 0.48,
+          Capacity: 10420,
+          LowFuel1: 750,
+          LowFuel2: 1250,
+          LowFuel3: 1500,
+          LowFuel4: 2000,
+          Grade: 1,
+          Abbr: 'UNLEAD',
+          EPA_Tank_ID: 2013121704,
+          Avg_Sales: 222,
+          IsUtc: true,
+          percentFull: 11.89
+        }
+      ]
     };
   },
   methods: {
@@ -511,23 +671,44 @@ export default defineComponent({
     onReset () {
       return 1;
     },
-    addBolToDeliveryNoPhoto (entryForm: any) {
-      this.takePhotoDialogPrompt = false;
-      const clonedEntryForm = { ...entryForm };
-      this.bolList.push(clonedEntryForm);
-    },
+    // addBolToDeliveryNoPhoto (entryForm: any) {
+    //   this.takePhotoDialogPrompt = false;
+    //   const clonedEntryFormNoPhoto = { ...entryForm };
+    //   this.bolList.push(clonedEntryFormNoPhoto);
+    // },
     addBolToDelivery (entryForm: any) {
+      this.noThanksClicked = false;
+      this.takePhotoDialogPrompt = false;
+      this.photoTaken = false;
       const clonedEntryForm = { ...entryForm };
       this.bolList.push(clonedEntryForm);
+      this.entryForm = {
+        bolNumber: '',
+        carrier: '',
+        driverName: '',
+        tractor: '',
+        trailer: '',
+        terminal: '',
+        supplier: '',
+        tank: '',
+        product: '',
+        gross: '',
+        net: '',
+        splitLoadStore: '',
+        hasImage: false,
+        // loadingDate: ref(`${new Date().toISOString().replace('T', ' ').replace('Z', '').slice(0, -4)}`).value,
+        loadingDate: ref(`${new Date().toISOString().replace('T', ' ').replace('Z', '').slice(0, -4)}`).value,
+        BolImage: ''
+      };
     },
     deleteBol (bol: any) {
       // this.bolList = this.bolList.filter(x => Object.keys(x).length !== 0).splice(this.bolList.filter(x => Object.keys(x).length !== 0).indexOf(bol), 1);
       this.bolList = _.remove(this.bolList, function (n: any) { return n.bolNumber !== bol; });
     },
     snapPhoto () {
-      let vm : any = this;
-      var base64string = vm.$refs.webcam.capture().replace('data:image/jpeg;base64,', '');
-      //var base64string = vm.$refs.webcam.capture();
+      const vm : any = this;
+      const base64string = vm.$refs.webcam.capture().replace('data:image/jpeg;base64,', '');
+      // var base64string = vm.$refs.webcam.capture();
       this.imagePreviewDialog = true;
       return this.cleanedString = base64string;
     },

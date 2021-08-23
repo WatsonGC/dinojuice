@@ -80,12 +80,7 @@
         </q-card-section>
 
         <q-card-actions align="right" class="text-accent">
-          <transition
-          appear
-          enter-active-class="animated bounceInLeft"
-          leave-active-class="animated bounceOutLeft">
           <q-btn flat label="Cancel" v-close-popup />
-          </transition>
           <q-btn flat label="Save" v-close-popup />
         </q-card-actions>
       </q-card>
