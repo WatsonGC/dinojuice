@@ -231,25 +231,38 @@
           <div class="text-h6">Take a Photo of the BOL</div>
         </q-card-section>
         <div align="center" class="text-primary">
-          <!-- <q-btn @click="takePhoto = true;" flat label="Take Photo" />
-          <q-btn @click="addBolToDeliveryNoPhoto(this.entryForm)" flat label="No Thanks" v-close-popup /> -->
+           <vue-web-cam ref="webcam" class="full-width" :selectFirstDevice="true" />
+          <q-btn @click="snapPhoto" flat label="Capture" />
+          <!-- <q-btn @click="addBolToDeliveryNoPhoto(this.entryForm)" flat label="No Thanks" v-close-popup />  -->
           </div>
         <q-card-actions align="center" class="text-accent">
           <q-btn flat @click="takePhotoDialog = false" label="Cancel" v-close-popup />
           <template v-if="this.photoTaken === true">
-          <q-btn flat label="Save" v-close-popup />
+          <q-btn @click="addBolToDelivery(this.entryForm)" flat label="Save" v-close-popup />
           </template>
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog
+      v-model="imagePreviewDialog"
+      persistent
+      transition-show="slide-up"
+      transition-hide="rotate">
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">Take a Photo of the BOL</div>
+        </q-card-section>
+        <div align="center" class="text-primary">
+          <q-img :src="`data:image/png;base64,${this.cleanedString}`" />
+           <q-btn @click="saveImageToBol(this.cleanedString)" flat label="Save" v-close-popup />
+          <q-btn @click="this.imagePreviewDialog = false" flat label="Try Again" v-close-popup/>
+          </div>
+        <q-card-actions align="center" class="text-accent">
+          <q-btn flat @click="takePhotoDialog = false" label="Cancel" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
       </q-form>
-        <!-- <q-list>
-        <q-item-section>
-          <q-item v-for="bol in bolList" v-bind:key="bol">
-            <span>{{bol.bolNumber}}</span>
-          </q-item>
-          </q-item-section>
-          </q-list> -->
           <div v-for="bol in bolList.filter(x => Object.keys(x).length !== 0)" v-bind:key="bol">
             <q-card>
               <q-card-actions>
@@ -261,7 +274,7 @@
               </q-card-actions>
             <q-card-section>
               <div class="text-h6">
-                BOL # {{bol.bolNumber}} | 
+                BOL # {{bol.bolNumber}} |
                 </div>
                 <div class="text-h6">
                 Has Photo {{bol.hasImage}}
@@ -376,15 +389,22 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import _ from 'lodash';
+import WebCam from 'src/components/webcam.vue';
 
 export default defineComponent({
   name: 'Delivery',
+  components: {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    'vue-web-cam': WebCam
+  },
   data () {
     return {
       step: 1,
       takePhotoDialogPrompt: false,
       takePhoto: false,
       photoTaken: false,
+      imagePreviewDialog: false,
+      cleanedString: '',
       entryForm: {
         bolNumber: '',
         carrier: '',
@@ -399,7 +419,8 @@ export default defineComponent({
         net: '',
         splitLoadStore: '',
         hasImage: false,
-        loadingDate: ref(`${new Date().toISOString().replace('T', ' ').replace('Z', '').slice(0, -4)}`)
+        loadingDate: ref(`${new Date().toISOString().replace('T', ' ').replace('Z', '').slice(0, -4)}`),
+        BolImage: ''
       },
       isSplitLoad: false,
       bolList: [{}],
@@ -503,6 +524,20 @@ export default defineComponent({
       // this.bolList = this.bolList.filter(x => Object.keys(x).length !== 0).splice(this.bolList.filter(x => Object.keys(x).length !== 0).indexOf(bol), 1);
       this.bolList = _.remove(this.bolList, function (n: any) { return n.bolNumber !== bol; });
     },
+    snapPhoto () {
+      let vm : any = this;
+      var base64string = vm.$refs.webcam.capture().replace('data:image/jpeg;base64,', '');
+      //var base64string = vm.$refs.webcam.capture();
+      this.imagePreviewDialog = true;
+      return this.cleanedString = base64string;
+    },
+    saveImageToBol (base64: any) {
+      this.entryForm.hasImage = true;
+      this.entryForm.BolImage = base64;
+      this.takePhoto = false;
+      this.imagePreviewDialog = false;
+      this.photoTaken = true;
+    }
   },
   computed: {
     filteredBolList () : any {
