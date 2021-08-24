@@ -102,6 +102,8 @@
 import { firebaseAuth } from 'src/boot/firebase';
 
 export default {
+  name: 'Register',
+  inject: ['storeMode'],
   data () {
     return {
       form: {
@@ -117,7 +119,6 @@ export default {
   },
   methods: {
     OnSubmit () {
-      debugger;
       firebaseAuth
         .createUserWithEmailAndPassword(this.form.email, this.form.password)
         .then(data => {

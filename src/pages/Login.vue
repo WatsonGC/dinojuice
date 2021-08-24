@@ -1,5 +1,6 @@
 <template>
   <q-page-container>
+    <template v-if="storeMode.value === false">
   <div class="q-pa-md row items-start q-gutter-md">
             <div v-if="error">
                 <q-dialog
@@ -68,12 +69,20 @@
                 </div>
             </q-form>
     </div>
+    </template>
+    <template v-else>
+      <div style="font-size: 18vh" class="text-centered">
+        Store 366
+      </div>
+      </template>
   </q-page-container>
 </template>
 
 <script>
 import { firebaseAuth } from 'src/boot/firebase';
 export default {
+  name: 'Login',
+  inject: ['storeMode'],
   data () {
     return {
       form: {

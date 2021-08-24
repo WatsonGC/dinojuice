@@ -54,11 +54,20 @@
             />
         </transition>
         </a>
+        <template v-if="this.storeMode === true">
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
           v-bind="link"
         />
+        </template>
+        <template v-else>
+          <EssentialLink
+          v-for="link in essentialLinksFiltered"
+          :key="link.title"
+          v-bind="link"
+        />
+          </template>
       </q-list>
     </q-drawer>
       <div>
@@ -77,6 +86,9 @@
         </q-card-section>
         <q-card-section class="q-pt-none">
           <q-btn :icon="this.desktopMode ? 'fas fa-mobile' : 'fas fa-desktop' " @click="forceDesktopMode(this.desktopMode)"></q-btn> <span class="text-weight-medium text-secondary" style="margin-left:20px;">{{forceDesktopModeString}}</span>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-btn :icon="this.storeMode ? 'fas fa-mobile' : 'fas fa-desktop' " @click="forceStoreMode(this.storeMode)"></q-btn> <span class="text-weight-medium text-secondary" style="margin-left:20px;">{{forceStoreModeString}}</span>
         </q-card-section>
 
         <q-card-actions align="right" class="text-accent">
@@ -107,6 +119,13 @@ const linksList = [
     link: '/History'
   }
 ];
+const linksListFiltered = [
+  {
+    title: 'Deliver Fuel',
+    icon: 'fas fa-gas-pump',
+    link: '/Delivery'
+  }
+];
 
 import { defineComponent, computed } from 'vue';
 import { db } from 'src/boot/firebase';
@@ -124,7 +143,9 @@ export default defineComponent({
       essentialLinks: linksList,
       settingsDialog: false,
       miniState: false,
-      desktopMode: false
+      desktopMode: false,
+      storeMode: false,
+      essentialLinksFiltered: linksListFiltered
     };
   },
 
@@ -145,6 +166,9 @@ export default defineComponent({
       void db.collection('forceDesktopMode').doc('toggle').update({
         desktopMode
       });
+    },
+    forceStoreMode (storeMode: boolean) {
+      if (this.storeMode === false) { this.storeMode = true; } else { this.storeMode = false; }
     }
   },
   computed: {
@@ -153,11 +177,15 @@ export default defineComponent({
     },
     forceDesktopModeString (): string {
       return this.desktopMode ? 'Mobile Responsive Mode' : 'Force Desktop Mode';
+    },
+    forceStoreModeString (): string {
+      return this.storeMode ? 'Switch to Driver Mode' : 'Switch to Store Mode';
     }
   },
   provide () {
     return {
-      desktopMode: computed(() => this.desktopMode)
+      desktopMode: computed(() => this.desktopMode),
+      storeMode: computed(() => this.storeMode)
     };
   },
 });
