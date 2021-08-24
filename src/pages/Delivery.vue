@@ -1,5 +1,114 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 <template>
   <div class="q-pa-md">
+    <template v-if="!locationSelected && !storeMode.value">
+
+<template v-if="this.testingArr.length > 0">
+      <q-dialog
+      v-model="locationPicker"
+      persistent
+      transition-show="slide-up"
+      transition-hide="rotate">
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h5">You appear to be at Store {{this.testingArr[0].StoreNumber}}</div>
+        </q-card-section>
+        <q-card-section>
+          <div class="text-center">
+            <div class="text-h6">
+            Located at:
+            </div>
+            {{this.testingArr[0].Address + ', ' + this.testingArr[0].City + ', ' + this.testingArr[0].State}}
+            </div>
+            <div class="text-subtitle2 text-center">
+              is this correct?
+              </div>
+          </q-card-section>
+        <div align="center" class="text-primary">
+           <q-btn flat label="Yes" @click="locationSelectedByPicker(this.testingArr[0].StoreNumber)" />
+          <q-btn  flat label="No" @click="declineFirstLocation()" />
+          </div>
+      </q-card>
+    </q-dialog>
+    <q-dialog
+      v-model="locationPicker2"
+      persistent
+      transition-show="slide-up"
+      transition-hide="rotate">
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-subtitle2 text-center">
+            let's try that again
+            </div>
+          <div class="text-h5">You appear to be at Store {{this.testingArr[1].StoreNumber}}</div>
+        </q-card-section>
+        <q-card-section>
+          <div class="text-center">
+            <div class="text-h6">
+            Located at:
+            </div>
+            {{this.testingArr[1].Address + ', ' + this.testingArr[1].City + ', ' + this.testingArr[1].State}}
+            </div>
+            <div class="text-subtitle2 text-center">
+              is this correct?
+              </div>
+          </q-card-section>
+        <div align="center" class="text-primary">
+           <q-btn flat label="Yes" @click="locationSelectedByPicker(this.testingArr[1].StoreNumber)" />
+          <q-btn  flat label="No" @click="declineSecondLocation()"/>
+          </div>
+      </q-card>
+    </q-dialog>
+    <q-dialog
+      v-model="locationPicker3"
+      persistent
+      transition-show="slide-up"
+      transition-hide="rotate">
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h5">Please select a Store Number</div>
+        </q-card-section>
+        <q-card-section>
+          <div class="col absolute-center">
+            <q-select
+        filled
+        v-model="storePickerValue"
+        dense
+        label="Store Number"
+        :options="this.storeListArr"
+        style="width: 250px"
+      >
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey">
+              No results
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
+      </div>
+        </q-card-section>
+        <template v-if="this.storePickerValue.label !== ''">
+        <div class="text-h5 text-center q-pt-md">Selected Store: {{this.storePickerValue.label}}</div>
+        <q-card-section>
+          <div class="text-center">
+            <div class="text-h6">
+            Located at:
+            </div>
+            {{this.storePickerValue.Address + ', ' + this.storePickerValue.City + ', ' + this.storePickerValue.State}}
+            </div>
+        </q-card-section>
+              </template>
+            <div class="text-h6"></div>
+        <div align="center" class="text-primary">
+           <q-btn flat label="Save" @click="locationSelectedByPicker(storePickerValue.label.toString())" />
+          </div>
+      </q-card>
+    </q-dialog>
+    </template>
+      </template>
+      <template v-else>
 
     <q-stepper
       v-model="step"
@@ -14,13 +123,13 @@
         :done="step > 1"
         style="min-height: 200px;"
       >
-        Enter BOL Info
+      <div class="fit row wrap justify-start items-start content-start q-gutter-lg">
       <q-form
       @submit="onSubmit"
       @reset="onReset"
-      class="q-gutter-md"
     >
     <div class="row">
+      <div class="col">
       <q-input
         filled
         v-model="entryForm.bolNumber"
@@ -30,8 +139,6 @@
         class="q-pa-sm"
         :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
-</div>
-<div class="q-gutter-md">
       <q-select
         filled
         v-model="entryForm.carrier"
@@ -45,6 +152,8 @@
         :options="carrierOptions"
       >
       </q-select>
+            </div>
+      </div>
       <q-select
         filled
         v-model="entryForm.driverName"
@@ -191,15 +300,16 @@
       >
       </q-select>
       </template>
-  </div>
-      </div>
-      <!-- <q-btn icon="fas fa-plus" @click="addBolToDelivery(this.entryForm)"> -->
-        <q-btn icon="fas fa-plus" @click="takePhotoDialogPrompt = true">
+            <div class="row">
+              <div class="col">
+                <q-btn icon="fas fa-plus" @click="takePhotoDialogPrompt = true">
          <q-tooltip class="bg-accent">Add this BOL to Delivery</q-tooltip>
          <span class="q-pl-xs">
       Add this BOL to Delivery
       </span>
       </q-btn>
+      </div>
+      </div>
       <q-dialog
       v-model="takePhotoDialogPrompt"
       persistent
@@ -258,6 +368,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    </div>
       </q-form>
           <div v-for="bol in bolList.filter(x => Object.keys(x).length !== 0)" v-bind:key="bol">
             <q-card>
@@ -269,61 +380,24 @@
                 </q-btn>
               </q-card-actions>
             <q-card-section>
-              <div class="row">
-              <div class="text-h6">
-                BOL # {{bol.bolNumber}} |
-                </div>
-                <div class="text-h6">
-                Photo Attached {{bol.hasImage}}
-                </div>
-                </div>
-                <q-separator />
-                <div class="text-h6">
-                Loading Date {{bol.loadingDate}}
-                </div>
-                <q-separator />
-                <div class="text-h6">
-                Driver {{bol.driverName}}
-                </div>
-                <q-separator />
-                <div class="row">
-                <div class="text-h6">
-                 Carrier {{bol.carrier}} |
-                </div>
-                <div class="text-h6">
-                 Terminal {{bol.terminal}} |
-                </div>
-                <div class="text-h6">
-                 Supplier {{bol.supplier}}
-                </div>
-                </div>
-                <q-separator />
-                <div class="row">
-                <div class="text-h6">
-                Tractor {{bol.tractor}} |
-                </div>
-                <div class="text-h6">
-                Trailer {{bol.trailer}}
-                </div>
-                </div>
-                <q-separator />
-                <div class="row">
-                <div class="text-h6">
-                Tank {{bol.tank}} |
-                </div>
-                <div class="text-h6">
-                Product {{bol.product}} |
-                </div>
-                <div class="text-h6">
-                Gross {{bol.gross}} |
-                </div>
-                <div class="text-h6">
-                Net {{bol.net}}
-                </div>
-                </div>
+              <ul>
+                <li>BOL # {{bol.bolNumber}}</li>
+                <li>Photo Attached {{bol.hasImage}}</li>
+                <li>Loading Date {{bol.loadingDate}}</li>
+                <li>Driver {{bol.driverName}}</li>
+                <li>Carrier {{bol.carrier}}</li>
+                <li>Terminal {{bol.terminal}}</li>
+                <li>Supplier {{bol.supplier}}</li>
+                <li>Tractor {{bol.tractor}}</li>
+                <li>Trailer {{bol.trailer}}</li>
+                <li>Tank {{bol.tank}}</li>
+                <li>Product {{bol.product}}</li>
+                <li>Gross {{bol.gross}}</li>
+               <li> Net {{bol.net}}</li>
+                </ul>
               </q-card-section>
-
             </q-card>
+            </div>
             </div>
       </q-step>
 
@@ -335,37 +409,39 @@
         style="min-height: 200px;"
       >
         Delivery In Progress
+        <div class="fit row wrap justify-start items-start content-start q-gutter-lg">
         <div v-for="tank in begTankReadings" v-bind:key="tank">
-          <q-card>
+          <q-card style="min-width:auto;min-height:auto;">
             <q-card-section>
-              <div class="col">
               <q-knob
                 show-value
                 font-size="10px"
-                class="q-ma-md"
+                class="q-ml-lg q-mt-xs q-mr-lg no-pointer-events"
                 v-model="tank.percentFull"
                 size="80px"
                 :thickness="0.25"
                 color="primary"
                 track-color="grey-3"
+                readonly
               >
-                <q-avatar size="60px">
+                <q-avatar size="60px" class="no-pointer-events">
                   <img src="~/assets/dinojuice.png">
                 </q-avatar>
               </q-knob>
-              </div>
-              <div class="col">
-              <span class="bottom 1-ml-xl text-subtitle2">{{tank.percentFull}}%</span>
-              </div>
-              <div class="col-2">
-               <span>Tank Number: {{tank.Tank_Number}} </span>
-              <span>Grade: {{tank.Abbr}} </span>
-              <span>Gallons: {{tank.Tank_Number}} </span>
-              <span>Ullage: {{tank.Ullage}} </span>
-              <span>Capacity: {{tank.Capacity}}</span>
+                  <div class="tinyTextWrapper">
+                      <ul>
+              <li><b>Percent Full:</b> {{tank.percentFull}}%</li>
+              <li><b>Tank Number:</b> {{tank.Tank_Number}} </li>
+              <li><b>Grade:</b> {{tank.Abbr}} </li>
+              <li><b>Gallons:</b> {{tank.Tank_Number}} </li>
+              <li><b>Ullage:</b> {{tank.Ullage}} </li>
+              <li><b>Capacity:</b> {{tank.Capacity}}</li>
+ 
+              </ul>
               </div>
               </q-card-section>
             </q-card>
+            </div>
             </div>
       </q-step>
 
@@ -377,8 +453,40 @@
         style="min-height: 200px;"
       >
         End Delivery
+        <div class="fit row wrap justify-start items-start content-start q-gutter-lg">
+        <div v-for="tank in endTankReadings" v-bind:key="tank">
+          <q-card style="min-width:auto;min-height:auto;">
+            <q-card-section>
+              <q-knob
+                show-value
+                font-size="10px"
+                class="q-ml-lg q-mt-xs q-mr-lg no-pointer-events"
+                v-model="tank.percentFull"
+                size="80px"
+                :thickness="0.25"
+                color="primary"
+                track-color="grey-3"
+                readonly
+              >
+                <q-avatar size="60px" class="no-pointer-events">
+                  <img src="~/assets/dinojuice.png">
+                </q-avatar>
+              </q-knob>
+                  <div class="tinyTextWrapper">
+                      <ul>
+              <li :class="[tank.percentFull === 87.54 ? 'redAlert' : '']"><b>Percent Full:</b> {{tank.percentFull}}%</li>
+              <li><b>Tank Number:</b> {{tank.Tank_Number}} </li>
+              <li><b>Grade:</b> {{tank.Abbr}} </li>
+              <li><b>Gallons:</b> {{tank.Tank_Number}} </li>
+              <li><b>Ullage:</b> {{tank.Ullage}} </li>
+              <li><b>Capacity:</b> {{tank.Capacity}}</li>
+              </ul>
+              </div>
+              </q-card-section>
+            </q-card>
+            </div>
+            </div>
       </q-step>
-
       <q-step
         :name="4"
         title="Delivery Complete"
@@ -397,7 +505,7 @@
 
       <template v-slot:message>
         <q-banner v-if="step === 1" class="bg-green-8 text-white q-px-lg">
-          Enter BOL Info
+          Enter BOL Info for Store {{ this.selectedStore }}
         </q-banner>
         <q-banner v-else-if="step === 2" class="bg-purple-8 text-white q-px-lg">
           Delivery In Progress
@@ -413,6 +521,7 @@
         </q-banner>
       </template>
     </q-stepper>
+    </template>
 
   </div>
 </template>
@@ -421,14 +530,42 @@
 import { defineComponent, ref } from 'vue';
 import _ from 'lodash';
 import WebCam from 'src/components/webcam.vue';
+import { db } from 'src/boot/firebase';
+import { storeEntry } from 'components/models';
+import { QuerySnapshot, DocumentData } from '@firebase/firestore-types';
 
 export default defineComponent({
   name: 'Delivery',
+  inject: ['storeMode'],
   components: {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     'vue-web-cam': WebCam
   },
   data () {
+    const store: storeEntry = {
+      StoreNumber: null,
+      Sequence: null,
+      Division: null,
+      DivisionName: '',
+      Address: '',
+      City: '',
+      State: '',
+      Zip: '',
+      PhoneNumber: '',
+      DateOpened: '',
+      Latitude: '',
+      Longitude: '',
+      TimeZoneName: '',
+      IsOpen: false,
+      IsTravelCenter: false,
+      ValidFrom: '',
+      ValidTo: '',
+      CreateUser: '',
+      County: '',
+      AutoMpdCount: null,
+      TruckMpdCount: null,
+      IsNsf: false
+    };
     return {
       step: 1,
       takePhotoDialogPrompt: false,
@@ -437,7 +574,9 @@ export default defineComponent({
       imagePreviewDialog: false,
       noThanksClicked: false,
       tankLevel: 30,
+      locationSelected: false,
       cleanedString: '',
+      locationPicker: true,
       entryForm: {
         bolNumber: '',
         carrier: '',
@@ -661,7 +800,144 @@ export default defineComponent({
           IsUtc: true,
           percentFull: 11.89
         }
-      ]
+      ],
+      endTankReadings: [
+        {
+          Entry_ID: 482765075,
+          Store_Number: 366,
+          Sequence: 9997,
+          Division: 3,
+          Entry_Date_Time: '2021-08-23T16:16:38.4826592-05:00',
+          Successfull: 1,
+          Tank_Number: 1,
+          Gallons: 6956,
+          Ullage: 12825,
+          Inches: 45.81,
+          Temperature: 76.21,
+          Water: 0,
+          Capacity: 19782,
+          LowFuel1: 750,
+          LowFuel2: 2000,
+          LowFuel3: 3000,
+          LowFuel4: 4000,
+          Grade: 2,
+          Abbr: 'UNLE10',
+          EPA_Tank_ID: 2013121701,
+          Avg_Sales: 8012,
+          IsUtc: true,
+          percentFull: 35.16
+        },
+        {
+          Entry_ID: 482765076,
+          Store_Number: 366,
+          Sequence: 9997,
+          Division: 3,
+          Entry_Date_Time: '2021-08-23T16:16:38.4866490-05:00',
+          Successfull: 1,
+          Tank_Number: 2,
+          Gallons: 7113,
+          Ullage: 12668,
+          Inches: 46.55,
+          Temperature: 75.73,
+          Water: 0,
+          Capacity: 19782,
+          LowFuel1: 750,
+          LowFuel2: 2000,
+          LowFuel3: 3000,
+          LowFuel4: 4000,
+          Grade: 2,
+          Abbr: 'UNLE10',
+          EPA_Tank_ID: 2013121701,
+          Avg_Sales: 8012,
+          IsUtc: true,
+          percentFull: 35.95
+        },
+        {
+          Entry_ID: 482765077,
+          Store_Number: 366,
+          Sequence: 9997,
+          Division: 3,
+          Entry_Date_Time: '2021-08-23T16:16:38.4896407-05:00',
+          Successfull: 1,
+          Tank_Number: 3,
+          Gallons: 3401,
+          Ullage: 6079,
+          Inches: 45.91,
+          Temperature: 76.11,
+          Water: 0,
+          Capacity: 9481,
+          LowFuel1: 750,
+          LowFuel2: 2000,
+          LowFuel3: 3000,
+          LowFuel4: 4000,
+          Grade: 5,
+          Abbr: 'PREE10',
+          EPA_Tank_ID: 2013121702,
+          Avg_Sales: 1234,
+          IsUtc: true,
+          percentFull: 35.87
+        },
+        {
+          Entry_ID: 482765078,
+          Store_Number: 366,
+          Sequence: 9997,
+          Division: 3,
+          Entry_Date_Time: '2021-08-23T16:16:38.4936297-05:00',
+          Successfull: 1,
+          Tank_Number: 4,
+          Gallons: 4108,
+          Ullage: 7499,
+          Inches: 35.05,
+          Temperature: 79.41,
+          Water: 0,
+          Capacity: 11608,
+          LowFuel1: 750,
+          LowFuel2: 2000,
+          LowFuel3: 3000,
+          LowFuel4: 4000,
+          Grade: 13,
+          Abbr: 'DSL',
+          EPA_Tank_ID: 2013121703,
+          Avg_Sales: 642,
+          IsUtc: true,
+          percentFull: 35.38
+        },
+        {
+          Entry_ID: 482765079,
+          Store_Number: 366,
+          Sequence: 9997,
+          Division: 3,
+          Entry_Date_Time: '2021-08-23T16:16:38.4966222-05:00',
+          Successfull: 1,
+          Tank_Number: 5,
+          Gallons: 9122,
+          Ullage: 9181,
+          Inches: 22.34,
+          Temperature: 75.87,
+          Water: 0.48,
+          Capacity: 10420,
+          LowFuel1: 750,
+          LowFuel2: 1250,
+          LowFuel3: 1500,
+          LowFuel4: 2000,
+          Grade: 1,
+          Abbr: 'UNLEAD',
+          EPA_Tank_ID: 2013121704,
+          Avg_Sales: 222,
+          IsUtc: true,
+          percentFull: 87.54
+        }
+      ],
+      firstStores: [] as unknown[],
+      store,
+      testingArr: [] as unknown[],
+      selectedStore: '',
+      locationPicker2: false,
+      locationPicker3: false,
+      storesList: [] as unknown[],
+      storePickerValue: {
+        label: ''
+      }
     };
   },
   methods: {
@@ -671,6 +947,34 @@ export default defineComponent({
     onReset () {
       return 1;
     },
+    locationSelectedByPicker (storenum: unknown) {
+      this.locationSelected = true;
+      this.selectedStore = storenum as string;
+    },
+    declineFirstLocation () {
+      this.locationPicker = false;
+      this.locationPicker2 = true;
+    },
+    declineSecondLocation () {
+      this.locationPicker2 = false;
+      this.locationPicker3 = true;
+    },
+    // filterFn (val, update) {
+    // if (val === '') {
+    //   update(() => {
+    //     this.storePickerValue.value = this.storesList;
+
+    //     // here you have access to "ref" which
+    //     // is the Vue reference of the QSelect
+    //   });
+    //   return;
+    // }
+
+    // update(() => {
+    //   const needle = val.toLowerCase();
+    //   this.storePickerValue.value = this.storesList.filter(v => v.toLowerCase().indexOf(needle) > -1);
+    // });
+    // },
     // addBolToDeliveryNoPhoto (entryForm: any) {
     //   this.takePhotoDialogPrompt = false;
     //   const clonedEntryFormNoPhoto = { ...entryForm };
@@ -724,10 +1028,62 @@ export default defineComponent({
     filteredBolList () : any {
       const filteredList = this.bolList.filter((x: any) => Object.keys(x).length !== 0);
       return filteredList;
-    }
+    },
+    // storeListMapped () : any {
+    //   return this.storeListArr.map(x => ({
+    //     label: x.StoreNumber.toString(),
+    //     value: x.StoreNumber.toString(),
+    //     Address: x.Address,
+    //     City: x.City,
+    //     State: x.State
+    //   }));
+    // },
+    storeListArr () : any {
+      return _.orderBy(Object.values(this.storesList).map(x => ({
+        label: x.StoreNumber,
+        value: x.StoreNumber,
+        Address: x.Address,
+        City: x.City,
+        State: x.State
+      })), ['label'], ['asc']);
+    },
+  },
+  created () {
+    db.collection('storeInfo').where('StoreNumber', 'in', [366, 383]).onSnapshot((snapshotChange: QuerySnapshot<DocumentData>) => {
+      this.testingArr = [];
+
+      snapshotChange.docs.forEach((doc) => {
+        this.testingArr.push(doc.data());
+      });
+    });
+
+    db.collection('storeInfo').onSnapshot((snapshotChange: QuerySnapshot<DocumentData>) => {
+      this.storesList = [];
+
+      snapshotChange.docs.forEach((doc) => {
+        this.storesList.push(_.pick(doc.data(), ['StoreNumber', 'Address', 'City', 'State']));
+      });
+    });
+
+    // setTimeout(function () { console.log('TEST', this.storesList); }, 4000);
+    // const storesDropdown = this.storesList.map(x => _.pick(x, ['StoreNumber', 'Address', 'City', 'State']));
+    // console.log(storesDropdown);
   }
+
 });
 </script>
 
 <style lang="scss">
+
+.tinyTextWrapper{
+  font-size: 9px;
+  margin-right:30px;
+  // padding-top: 0px !important;
+  // padding-left: 0px !important;
+  // padding-bottom: 0px !important;
+  // padding-right: 0px !important;
+}
+.redAlert{
+  color: red;
+}
 </style>

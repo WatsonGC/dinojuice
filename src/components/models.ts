@@ -19,3 +19,28 @@ export interface QuerySnapshot<DocumentData> {
 export interface desktopMode{
   
 }
+
+export interface storeEntry{
+    StoreNumber: number | null,
+    Sequence: number | null,
+    Division: number | null,
+    DivisionName: string,
+    Address: string,
+    City: string,
+    State: string,
+    Zip: string,
+    PhoneNumber: string,
+    DateOpened: string,
+    Latitude: string,
+    Longitude: string,
+    TimeZoneName: string,
+    IsOpen: boolean,
+    IsTravelCenter: boolean,
+    ValidFrom: string,
+    ValidTo: string,
+    CreateUser: string,
+    County: string,
+    AutoMpdCount: number | null,
+    TruckMpdCount: number | null,
+    IsNsf: boolean
+}
