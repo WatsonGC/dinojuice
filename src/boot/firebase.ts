@@ -34,6 +34,7 @@ const db = firebase.firestore();
 
 export default boot(({ app }) => {
   app.config.globalProperties.db = db;
+  app.config.globalProperties.firebaseAuth = firebaseAuth;
 });
 
 export { firebaseAuth, db };

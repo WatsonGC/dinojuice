@@ -4,14 +4,21 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    name: 'Login',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Index.vue') }]
+    children: [{ name: 'LoginChild', path: '', component: () => import('pages/Login.vue') }]
+  },
+  {
+    path: '/Register',
+    name: 'Register',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ name: 'RegisterChild', path: '', component: () => import('pages/Register.vue') }]
   },
   {
     path: '/Delivery',
     name: 'Delivery',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Delivery.vue') }]
+    children: [{ name: 'DeliveryChild', path: '', component: () => import('pages/Delivery.vue') }]
   },
   {
     path: '/History',
