@@ -24,7 +24,6 @@
       </q-card>
     </q-dialog>
                 </div>
-                 <!-- <form action="#" @submit.prevent="submit"> -->
                       <q-form
                        @submit="onSubmit">
                      <div class="row fixed-center">

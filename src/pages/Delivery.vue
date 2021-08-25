@@ -124,10 +124,6 @@
         style="min-height: 200px;"
       >
       <div class="fit row wrap justify-start items-start content-start q-gutter-sm">
-      <!-- <q-form
-      @submit="onSubmit"
-      @reset="onReset"
-    > -->
     <div class="row">
       <div class="col">
       <q-input
@@ -193,7 +189,6 @@
       </q-select>
       </div>
       </div>
-       <!-- <div class="q-pa-md" > -->
          <div class="row">
            <div class="column">
     <q-input dense filled v-model="entryForm.loadingDate" class="q-pa-sm" label="Loading Date" style="max-width: 200px;">
@@ -387,8 +382,6 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <!-- </div> -->
-      <!-- </q-form> -->
             </div>
                   </div>
       </div>
@@ -984,27 +977,6 @@ export default defineComponent({
       this.locationPicker2 = false;
       this.locationPicker3 = true;
     },
-    // filterFn (val, update) {
-    // if (val === '') {
-    //   update(() => {
-    //     this.storePickerValue.value = this.storesList;
-
-    //     // here you have access to "ref" which
-    //     // is the Vue reference of the QSelect
-    //   });
-    //   return;
-    // }
-
-    // update(() => {
-    //   const needle = val.toLowerCase();
-    //   this.storePickerValue.value = this.storesList.filter(v => v.toLowerCase().indexOf(needle) > -1);
-    // });
-    // },
-    // addBolToDeliveryNoPhoto (entryForm: any) {
-    //   this.takePhotoDialogPrompt = false;
-    //   const clonedEntryFormNoPhoto = { ...entryForm };
-    //   this.bolList.push(clonedEntryFormNoPhoto);
-    // },
     addBolToDelivery (entryForm: any) {
       this.noThanksClicked = false;
       this.takePhotoDialogPrompt = false;
@@ -1025,19 +997,16 @@ export default defineComponent({
         net: '',
         splitLoadStore: '',
         hasImage: false,
-        // loadingDate: ref(`${new Date().toISOString().replace('T', ' ').replace('Z', '').slice(0, -4)}`).value,
         loadingDate: ref(`${new Date().toISOString().replace('T', ' ').replace('Z', '').slice(0, -4)}`).value,
         BolImage: ''
       };
     },
     deleteBol (bol: any) {
-      // this.bolList = this.bolList.filter(x => Object.keys(x).length !== 0).splice(this.bolList.filter(x => Object.keys(x).length !== 0).indexOf(bol), 1);
       this.bolList = _.remove(this.bolList, function (n: any) { return n.bolNumber !== bol; });
     },
     snapPhoto () {
       const vm : any = this;
       const base64string = vm.$refs.webcam.capture().replace('data:image/jpeg;base64,', '');
-      // var base64string = vm.$refs.webcam.capture();
       this.imagePreviewDialog = true;
       return this.cleanedString = base64string;
     },
@@ -1054,15 +1023,6 @@ export default defineComponent({
       const filteredList = this.bolList.filter((x: any) => Object.keys(x).length !== 0);
       return filteredList;
     },
-    // storeListMapped () : any {
-    //   return this.storeListArr.map(x => ({
-    //     label: x.StoreNumber.toString(),
-    //     value: x.StoreNumber.toString(),
-    //     Address: x.Address,
-    //     City: x.City,
-    //     State: x.State
-    //   }));
-    // },
     storeListArr () : storeDropDownObject[] | any {
       return _.orderBy(Object.values(this.storesList).map((x: storeDropDownObjectInput) => ({
         label: x.StoreNumber,
@@ -1089,10 +1049,6 @@ export default defineComponent({
         this.storesList.push(_.pick(doc.data(), ['StoreNumber', 'Address', 'City', 'State']));
       });
     });
-
-    // setTimeout(function () { console.log('TEST', this.storesList); }, 4000);
-    // const storesDropdown = this.storesList.map(x => _.pick(x, ['StoreNumber', 'Address', 'City', 'State']));
-    // console.log(storesDropdown);
   }
 
 });
@@ -1103,10 +1059,6 @@ export default defineComponent({
 .tinyTextWrapper{
   font-size: 9px;
   margin-right:30px;
-  // padding-top: 0px !important;
-  // padding-left: 0px !important;
-  // padding-bottom: 0px !important;
-  // padding-right: 0px !important;
 }
 .redAlert{
   color: red;
