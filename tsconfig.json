@@ -1,6 +1,12 @@
 {
   "extends": "@quasar/app/tsconfig-preset",
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "strict": false,
+    "alwaysStrict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noEmitOnError": true
   }
 }

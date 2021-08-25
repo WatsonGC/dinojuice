@@ -531,7 +531,7 @@ import { defineComponent, ref } from 'vue';
 import _ from 'lodash';
 import WebCam from 'src/components/webcam.vue';
 import { db } from 'src/boot/firebase';
-import { storeEntry } from 'components/models';
+import { storeEntry, storeDropDownObject, storeDropDownObjectInput } from 'components/models';
 import { QuerySnapshot, DocumentData } from '@firebase/firestore-types';
 
 export default defineComponent({
@@ -1038,14 +1038,14 @@ export default defineComponent({
     //     State: x.State
     //   }));
     // },
-    storeListArr () : any {
-      return _.orderBy(Object.values(this.storesList).map(x => ({
+    storeListArr () : storeDropDownObject[] | any {
+      return _.orderBy(Object.values(this.storesList).map((x: storeDropDownObjectInput) => ({
         label: x.StoreNumber,
         value: x.StoreNumber,
         Address: x.Address,
         City: x.City,
         State: x.State
-      })), ['label'], ['asc']);
+      } as unknown as storeDropDownObject[])), ['label'], ['asc']);
     },
   },
   created () {
