@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 <template>
-<q-page class="q-pa-xs">
+  <div class="q-pa-md">
     <template v-if="!locationSelected && !storeMode.value">
 
 <template v-if="this.testingArr.length > 0">
@@ -123,11 +123,11 @@
         :done="step > 1"
         style="min-height: 200px;"
       >
-      <div class="fit row wrap justify-start items-start content-start q-gutter-sm">
-      <!-- <q-form
+      <div class="fit row wrap justify-start items-start content-start q-gutter-lg">
+      <q-form
       @submit="onSubmit"
       @reset="onReset"
-    > -->
+    >
     <div class="row">
       <div class="col">
       <q-input
@@ -139,7 +139,81 @@
         class="q-pa-sm"
         :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
-          <q-select
+      <q-select
+        filled
+        v-model="entryForm.carrier"
+        label="Carrier"
+        lazy-rules
+        dense
+        options-dense
+        clearable
+        class="q-pa-sm"
+        style="max-width: 200px;"
+        :options="carrierOptions"
+      >
+      </q-select>
+            </div>
+      </div>
+      <q-select
+        filled
+        v-model="entryForm.driverName"
+        label="Driver Name"
+        lazy-rules
+        dense
+        options-dense
+        clearable
+        class="q-pa-sm"
+        style="max-width: 200px;"
+        :options="driverOptions"
+      >
+      </q-select>
+      <q-input
+        filled
+        v-model="entryForm.tractor"
+        label="Tractor"
+        lazy-rules
+        dense
+        class="q-pa-sm"
+        style="max-width: 200px;"
+        :rules="[ val => val && val.length > 0 || 'Please type something']"
+      />
+      <q-input
+        filled
+        v-model="entryForm.trailer"
+        label="Trailer"
+        lazy-rules
+        dense
+        class="q-pa-sm"
+        style="max-width: 200px;"
+        :rules="[ val => val && val.length > 0 || 'Please type something']"
+      />
+       <div class="q-pa-md" style="max-width: 300px">
+    <q-input filled v-model="entryForm.loadingDate" label="Loading Date">
+      <template v-slot:prepend>
+        <q-icon name="event" class="cursor-pointer">
+          <q-popup-proxy transition-show="scale" transition-hide="scale">
+            <q-date v-model="entryForm.loadingDate" mask="YYYY-MM-DD HH:mm">
+              <div class="row items-center justify-end">
+                <q-btn v-close-popup label="Close" color="primary" flat />
+              </div>
+            </q-date>
+          </q-popup-proxy>
+        </q-icon>
+      </template>
+
+      <template v-slot:append>
+        <q-icon name="access_time" class="cursor-pointer">
+          <q-popup-proxy transition-show="scale" transition-hide="scale">
+            <q-time v-model="entryForm.loadingDate" mask="YYYY-MM-DD HH:mm" format24h>
+              <div class="row items-center justify-end">
+                <q-btn v-close-popup label="Close" color="primary" flat />
+              </div>
+            </q-time>
+          </q-popup-proxy>
+        </q-icon>
+      </template>
+    </q-input>
+    <q-select
         filled
         v-model="entryForm.terminal"
         label="Terminal"
@@ -165,86 +239,6 @@
         :options="supplierOptions"
       >
       </q-select>
-           <q-select
-        filled
-        v-model="entryForm.carrier"
-        label="Carrier"
-        lazy-rules
-        dense
-        options-dense
-        clearable
-        class="q-pa-sm"
-        style="max-width: 200px;"
-        :options="carrierOptions"
-      >
-      </q-select>
-      <q-select
-        filled
-        v-model="entryForm.driverName"
-        label="Driver Name"
-        lazy-rules
-        dense
-        options-dense
-        clearable
-        class="q-pa-sm"
-        style="max-width: 200px;"
-        :options="driverOptions"
-      >
-      </q-select>
-      </div>
-      </div>
-       <!-- <div class="q-pa-md" > -->
-         <div class="row">
-           <div class="column">
-    <q-input dense filled v-model="entryForm.loadingDate" class="q-pa-sm" label="Loading Date" style="max-width: 200px;">
-      <template v-slot:prepend>
-        <q-icon name="event" class="cursor-pointer">
-          <q-popup-proxy transition-show="scale" transition-hide="scale">
-            <q-date v-model="entryForm.loadingDate" mask="YYYY-MM-DD HH:mm">
-              <div class="row items-center justify-end">
-                <q-btn v-close-popup label="Close" color="primary" flat />
-              </div>
-            </q-date>
-          </q-popup-proxy>
-        </q-icon>
-      </template>
-
-      <template v-slot:append>
-        <q-icon name="access_time" class="cursor-pointer">
-          <q-popup-proxy transition-show="scale" transition-hide="scale">
-            <q-time v-model="entryForm.loadingDate" mask="YYYY-MM-DD HH:mm" format24h>
-              <div class="row items-center justify-end">
-                <q-btn v-close-popup label="Close" color="primary" flat />
-              </div>
-            </q-time>
-          </q-popup-proxy>
-        </q-icon>
-      </template>
-    </q-input>
-<q-input
-        filled
-        v-model="entryForm.tractor"
-        label="Tractor"
-        lazy-rules
-        dense
-        class="q-pa-sm"
-        style="max-width: 200px;"
-        :rules="[ val => val && val.length > 0 || 'Please type something']"
-      />
-      <q-input
-        filled
-        v-model="entryForm.trailer"
-        label="Trailer"
-        lazy-rules
-        dense
-        class="q-pa-sm"
-        style="max-width: 200px;"
-        :rules="[ val => val && val.length > 0 || 'Please type something']"
-      />
-            </div>
-      </div>
-               <div class="row">
-           <div class="column">
       <q-select
         filled
         v-model="entryForm.tank"
@@ -291,8 +285,21 @@
         style="max-width: 200px;"
         :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
-</div>
-</div>
+      <template v-if="isSplitLoad === true">
+            <q-select
+        filled
+        v-model="entryForm.splitLoadStore"
+        label="Split Load Store"
+        lazy-rules
+        dense
+        options-dense
+        clearable
+        class="q-pa-sm"
+        style="max-width: 200px;"
+        :options="splitLoadStoreOptions"
+      >
+      </q-select>
+      </template>
             <div class="row">
               <div class="col">
                 <q-btn icon="fas fa-plus" @click="takePhotoDialogPrompt = true">
@@ -301,34 +308,8 @@
       Add this BOL to Delivery
       </span>
       </q-btn>
-                <div v-for="bol in bolList.filter(x => Object.keys(x).length !== 0)" v-bind:key="bol">
-            <q-card>
-            <q-card-section>
-              <ul>
-                <li>BOL # {{bol.bolNumber}}</li>
-                <li>Photo Attached {{bol.hasImage}}</li>
-                <li>Loading Date {{bol.loadingDate}}</li>
-                <li>Driver {{bol.driverName}}</li>
-                <li>Carrier {{bol.carrier}}</li>
-                <li>Terminal {{bol.terminal}}</li>
-                <li>Supplier {{bol.supplier}}</li>
-                <li>Tractor {{bol.tractor}}</li>
-                <li>Trailer {{bol.trailer}}</li>
-                <li>Tank {{bol.tank}}</li>
-                <li>Product {{bol.product}}</li>
-                <li>Gross {{bol.gross}}</li>
-               <li> Net {{bol.net}}</li>
-                </ul>
-              </q-card-section>
-                            <q-card-actions>
-                <q-btn icon="fas fa-minus-circle" color="red" @click="deleteBol(bol.bolNumber)">
-                  <span class="q-pl-xs">
-                  Delete this BOL
-                  </span>
-                </q-btn>
-              </q-card-actions>
-            </q-card>
-            </div>
+      </div>
+      </div>
       <q-dialog
       v-model="takePhotoDialogPrompt"
       persistent
@@ -360,7 +341,7 @@
           <div class="text-h6">Take a Photo of the BOL</div>
         </q-card-section>
         <div align="center" class="text-primary">
-           <vue-web-cam ref="webcam" class="full-width full-height" :selectFirstDevice="true" />
+           <vue-web-cam ref="webcam" class="full-width" :selectFirstDevice="true" />
           <q-btn @click="snapPhoto" flat label="Capture" />
           </div>
         <q-card-actions align="center" class="text-accent">
@@ -387,11 +368,37 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <!-- </div> -->
-      <!-- </q-form> -->
+    </div>
+      </q-form>
+          <div v-for="bol in bolList.filter(x => Object.keys(x).length !== 0)" v-bind:key="bol">
+            <q-card>
+              <q-card-actions>
+                <q-btn icon="fas fa-minus-circle" color="red" @click="deleteBol(bol.bolNumber)">
+                  <span class="q-pl-xs">
+                  Delete this BOL
+                  </span>
+                </q-btn>
+              </q-card-actions>
+            <q-card-section>
+              <ul>
+                <li>BOL # {{bol.bolNumber}}</li>
+                <li>Photo Attached {{bol.hasImage}}</li>
+                <li>Loading Date {{bol.loadingDate}}</li>
+                <li>Driver {{bol.driverName}}</li>
+                <li>Carrier {{bol.carrier}}</li>
+                <li>Terminal {{bol.terminal}}</li>
+                <li>Supplier {{bol.supplier}}</li>
+                <li>Tractor {{bol.tractor}}</li>
+                <li>Trailer {{bol.trailer}}</li>
+                <li>Tank {{bol.tank}}</li>
+                <li>Product {{bol.product}}</li>
+                <li>Gross {{bol.gross}}</li>
+               <li> Net {{bol.net}}</li>
+                </ul>
+              </q-card-section>
+            </q-card>
             </div>
-                  </div>
-      </div>
+            </div>
       </q-step>
 
       <q-step
@@ -401,6 +408,7 @@
         :done="step > 2"
         style="min-height: 200px;"
       >
+        Delivery In Progress
         <div class="fit row wrap justify-start items-start content-start q-gutter-lg">
         <div v-for="tank in begTankReadings" v-bind:key="tank">
           <q-card style="min-width:auto;min-height:auto;">
@@ -425,10 +433,10 @@
               <li><b>Percent Full:</b> {{tank.percentFull}}%</li>
               <li><b>Tank Number:</b> {{tank.Tank_Number}} </li>
               <li><b>Grade:</b> {{tank.Abbr}} </li>
-              <li><b>Gallons:</b> {{tank.Gallons}} </li>
+              <li><b>Gallons:</b> {{tank.Tank_Number}} </li>
               <li><b>Ullage:</b> {{tank.Ullage}} </li>
               <li><b>Capacity:</b> {{tank.Capacity}}</li>
-
+ 
               </ul>
               </div>
               </q-card-section>
@@ -444,6 +452,7 @@
         :done="step > 3"
         style="min-height: 200px;"
       >
+        End Delivery
         <div class="fit row wrap justify-start items-start content-start q-gutter-lg">
         <div v-for="tank in endTankReadings" v-bind:key="tank">
           <q-card style="min-width:auto;min-height:auto;">
@@ -465,19 +474,13 @@
               </q-knob>
                   <div class="tinyTextWrapper">
                       <ul>
-              <li :class="[tank.percentFull === 87.54 ? 'largestVolumeIncrease' : '']"><b>Percent Full:</b> {{tank.percentFull}}%</li>
+              <li :class="[tank.percentFull === 87.54 ? 'redAlert' : '']"><b>Percent Full:</b> {{tank.percentFull}}%</li>
               <li><b>Tank Number:</b> {{tank.Tank_Number}} </li>
               <li><b>Grade:</b> {{tank.Abbr}} </li>
-              <li><b>Gallons:</b> {{tank.Gallons}} </li>
+              <li><b>Gallons:</b> {{tank.Tank_Number}} </li>
               <li><b>Ullage:</b> {{tank.Ullage}} </li>
               <li><b>Capacity:</b> {{tank.Capacity}}</li>
               </ul>
-              <div class="text-center">
-                <b>Variance: </b>
-                <div :class="[tank.variance === '+1298' ? 'greenAlert' : 'redAlert']">
-              {{tank.variance}}
-              </div>
-              </div>
               </div>
               </q-card-section>
             </q-card>
@@ -486,41 +489,17 @@
       </q-step>
       <q-step
         :name="4"
-        title="Delivery Complete, please click Save to confirm!"
+        title="Delivery Complete"
         icon="far fa-save"
         style="min-height: 200px;"
       >
-      <div class="fit row wrap justify-start items-start content-start q-gutter-lg">
-          <div v-for="bol in bolList.filter(x => Object.keys(x).length !== 0)" v-bind:key="bol">
-            <q-card>
-            <q-card-section>
-              <ul>
-                <li>BOL # {{bol.bolNumber}}</li>
-                <li>Photo Attached {{bol.hasImage}}</li>
-                <li>Loading Date {{bol.loadingDate}}</li>
-                <li>Driver {{bol.driverName}}</li>
-                <li>Carrier {{bol.carrier}}</li>
-                <li>Terminal {{bol.terminal}}</li>
-                <li>Supplier {{bol.supplier}}</li>
-                <li>Tractor {{bol.tractor}}</li>
-                <li>Trailer {{bol.trailer}}</li>
-                <li>Tank {{bol.tank}}</li>
-                <li>Product {{bol.product}}</li>
-                <li>Gross {{bol.gross}}</li>
-               <li> Net {{bol.net}}</li>
-                </ul>
-              </q-card-section>
-                            <q-card-actions>
-              </q-card-actions>
-            </q-card>
-            </div>
-            </div>
+        Delivery Complete
       </q-step>
 
       <template v-slot:navigation>
         <q-stepper-navigation>
+          <q-btn @click="$refs.stepper.next()" :disable="(bolList.filter(x => Object.keys(x).length !== 0)).length === 0" color="primary" :label="step === 4 ? 'Finish' : 'Continue'" />
           <q-btn v-if="step > 1" flat color="primary" @click="$refs.stepper.previous()" label="Back" class="q-ml-sm" />
-          <q-btn @click="$refs.stepper.next()" :disable="(bolList.filter(x => Object.keys(x).length !== 0)).length === 0" color="primary" :label="step === 4 ? 'Save' : 'Continue'" />
         </q-stepper-navigation>
       </template>
 
@@ -538,12 +517,13 @@
           Delivery Complete!
         </q-banner>
         <q-banner v-else class="bg-blue-8 text-white q-px-lg">
-          Default in case Gabe forgot a thing
+          The final step is creating the ad...
         </q-banner>
       </template>
     </q-stepper>
     </template>
-  </q-page>
+
+  </div>
 </template>
 
 <script lang="ts">
@@ -830,8 +810,8 @@ export default defineComponent({
           Entry_Date_Time: '2021-08-23T16:16:38.4826592-05:00',
           Successfull: 1,
           Tank_Number: 1,
-          Gallons: 6945,
-          Ullage: 12836,
+          Gallons: 6956,
+          Ullage: 12825,
           Inches: 45.81,
           Temperature: 76.21,
           Water: 0,
@@ -845,8 +825,7 @@ export default defineComponent({
           EPA_Tank_ID: 2013121701,
           Avg_Sales: 8012,
           IsUtc: true,
-          percentFull: 35.16,
-          variance: '-11'
+          percentFull: 35.16
         },
         {
           Entry_ID: 482765076,
@@ -856,8 +835,8 @@ export default defineComponent({
           Entry_Date_Time: '2021-08-23T16:16:38.4866490-05:00',
           Successfull: 1,
           Tank_Number: 2,
-          Gallons: 7110,
-          Ullage: 12671,
+          Gallons: 7113,
+          Ullage: 12668,
           Inches: 46.55,
           Temperature: 75.73,
           Water: 0,
@@ -871,8 +850,7 @@ export default defineComponent({
           EPA_Tank_ID: 2013121701,
           Avg_Sales: 8012,
           IsUtc: true,
-          percentFull: 35.95,
-          variance: '-3'
+          percentFull: 35.95
         },
         {
           Entry_ID: 482765077,
@@ -882,8 +860,8 @@ export default defineComponent({
           Entry_Date_Time: '2021-08-23T16:16:38.4896407-05:00',
           Successfull: 1,
           Tank_Number: 3,
-          Gallons: 3455,
-          Ullage: 6133,
+          Gallons: 3401,
+          Ullage: 6079,
           Inches: 45.91,
           Temperature: 76.11,
           Water: 0,
@@ -897,8 +875,7 @@ export default defineComponent({
           EPA_Tank_ID: 2013121702,
           Avg_Sales: 1234,
           IsUtc: true,
-          percentFull: 35.87,
-          variance: '-54'
+          percentFull: 35.87
         },
         {
           Entry_ID: 482765078,
@@ -908,8 +885,8 @@ export default defineComponent({
           Entry_Date_Time: '2021-08-23T16:16:38.4936297-05:00',
           Successfull: 1,
           Tank_Number: 4,
-          Gallons: 3980,
-          Ullage: 7627,
+          Gallons: 4108,
+          Ullage: 7499,
           Inches: 35.05,
           Temperature: 79.41,
           Water: 0,
@@ -923,8 +900,7 @@ export default defineComponent({
           EPA_Tank_ID: 2013121703,
           Avg_Sales: 642,
           IsUtc: true,
-          percentFull: 35.38,
-          variance: '-128'
+          percentFull: 35.38
         },
         {
           Entry_ID: 482765079,
@@ -935,7 +911,7 @@ export default defineComponent({
           Successfull: 1,
           Tank_Number: 5,
           Gallons: 9122,
-          Ullage: 1298,
+          Ullage: 9181,
           Inches: 22.34,
           Temperature: 75.87,
           Water: 0.48,
@@ -949,8 +925,7 @@ export default defineComponent({
           EPA_Tank_ID: 2013121704,
           Avg_Sales: 222,
           IsUtc: true,
-          percentFull: 87.54,
-          variance: '+1298'
+          percentFull: 87.54
         }
       ],
       firstStores: [] as unknown[],
@@ -1110,11 +1085,5 @@ export default defineComponent({
 }
 .redAlert{
   color: red;
-}
-.greenAlert{
-  color:green;
-}
-.largestVolumeIncrease{
-  font-weight: 900;
 }
 </style>
