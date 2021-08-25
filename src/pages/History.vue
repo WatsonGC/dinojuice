@@ -1,7 +1,6 @@
 <template>
   <q-page-container>
-<div class="q-pa-md">
-  <q-toggle v-model="loading" label="Loading state" class="q-mb-md" />
+<div class="q-pa-xs">
     <q-table
       :grid="($q.screen.xs && desktopMode.value === true)"
       title="Delivery Data"
@@ -10,7 +9,7 @@
       row-key="name"
       v-model:pagination="pagination"
       :filter="filter"
-      :loading="loading"
+      :loading="bolLoading"
     >
       <template v-slot:top-right>
         <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
@@ -148,13 +147,16 @@ export default defineComponent({
         }
       ] as unknown[],
       filter: '',
-      loading: false,
       pagination: {
         rowsPerPage: 10
       },
-      //desktopMode: [] as unknown[]
     };
   },
+  computed: {
+    bolLoading () : boolean {
+      return this.rows.length > 0 ? false : true;
+      }
+    },
   created () {
     db.collection('bols').onSnapshot((snapshotChange: QuerySnapshot<DocumentData>) => {
       this.rows = [];
@@ -163,13 +165,6 @@ export default defineComponent({
         this.rows.push(doc.data());
       });
     });
-    // db.collection('forceDesktopMode').onSnapshot((snapshotChange: QuerySnapshot<DocumentData>) => {
-    //   this.desktopMode = [];
-
-    //   snapshotChange.docs.forEach((doc) => {
-    //     this.desktopMode.push(doc.data());
-    //   });
-    // });
   },
 });
 </script>
