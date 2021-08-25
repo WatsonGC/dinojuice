@@ -88,7 +88,7 @@
           <q-btn :icon="this.desktopMode ? 'fas fa-mobile' : 'fas fa-desktop' " @click="forceDesktopMode(this.desktopMode)"></q-btn> <span class="text-weight-medium text-secondary" style="margin-left:20px;">{{forceDesktopModeString}}</span>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-btn :icon="this.storeMode ? 'fas fa-truck-moving' : 'fas fa-store-alt' " @click="forceStoreMode(this.storeMode)"></q-btn> <span class="text-weight-medium text-secondary" style="margin-left:20px;">{{forceStoreModeString}}</span>
+          <q-btn :icon="this.storeMode ? 'fas fa-mobile' : 'fas fa-desktop' " @click="forceStoreMode(this.storeMode)"></q-btn> <span class="text-weight-medium text-secondary" style="margin-left:20px;">{{forceStoreModeString}}</span>
         </q-card-section>
 
         <q-card-actions align="right" class="text-accent">

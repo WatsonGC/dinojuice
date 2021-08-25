@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 <template>
-<q-page>
+<q-page-container>
   <div class="q-pa-md row items-start q-gutter-md">
             <div v-if="error">
                 <q-dialog
@@ -95,7 +95,7 @@
                 </div>
             </q-form>
     </div>
-  </q-page>
+  </q-page-container>
 </template>
 
 <script>
