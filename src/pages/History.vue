@@ -1,15 +1,16 @@
 <template>
-  <q-page-container>
-<div class="q-pa-xs">
+  <q-page class="q-pa-xs">
     <q-table
-      :grid="($q.screen.xs && desktopMode.value === true)"
+      :grid="($q.screen.xs && desktopMode.value === false)"
       title="Delivery Data"
       :rows="rows"
       :columns="columns"
       row-key="name"
       v-model:pagination="pagination"
       :filter="filter"
+      dense
       :loading="bolLoading"
+      class="full-width"
     >
       <template v-slot:top-right>
         <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
@@ -52,8 +53,7 @@
         <q-inner-loading showing color="primary" />
       </template>
     </q-table>
-  </div>
-    </q-page-container>
+    </q-page>
 </template>
 
 <script lang="ts">
@@ -148,7 +148,7 @@ export default defineComponent({
       ] as unknown[],
       filter: '',
       pagination: {
-        rowsPerPage: 10
+        rowsPerPage: 15
       },
     };
   },
