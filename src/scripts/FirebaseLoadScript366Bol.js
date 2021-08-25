@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 const firebase = require('firebase');
-// Required for side-effects
+// Required for side-effects .
 require('firebase/firestore');
 
 // Initialize Cloud Firestore through Firebase
