@@ -44,3 +44,18 @@ export interface storeEntry{
     TruckMpdCount: number | null,
     IsNsf: boolean
 }
+
+export interface storeDropDownObject {
+  label: number,
+  value: number,
+  Address: string,
+  City: string,
+  State: string
+}
+
+export interface storeDropDownObjectInput {
+  StoreNumber: number,
+  Address: string,
+  City: string,
+  State: string
+}
