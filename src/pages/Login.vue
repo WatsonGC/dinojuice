@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page-container>
     <template v-if="storeMode.value === false">
   <div class="q-pa-md row items-start q-gutter-md">
             <div v-if="error">
@@ -17,9 +17,6 @@
           </div>
         <q-card-actions align="center" class="text-accent">
           <q-btn label="Close" v-close-popup />
-          <template v-if="error == 'There is no user record corresponding to this identifier. The user may have been deleted.'">
-            <q-btn :to="{name:'RegisterChild'}" class="text-accent">Register</q-btn>
-            </template>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -77,7 +74,7 @@
         Store 366
       </div>
       </template>
-  </q-page>
+  </q-page-container>
 </template>
 
 <script>
