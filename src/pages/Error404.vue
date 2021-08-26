@@ -7,7 +7,7 @@
           leave-active-class="animated bounceOutLeft slower"
           >
       <div style="font-size: 15vh">
-        Meteor strike
+        Meteor Strike
       </div>
       </transition>
 
