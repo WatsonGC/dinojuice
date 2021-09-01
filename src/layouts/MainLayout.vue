@@ -126,6 +126,8 @@ const linksListFiltered = [
     link: '/Delivery'
   }
 ];
+const DB_NAME = 'TEST';
+const DB_VERSION = 1;
 
 import { defineComponent, computed } from 'vue';
 import { db } from 'src/boot/firebase';
@@ -169,7 +171,70 @@ export default defineComponent({
     },
     forceStoreMode (storeMode: boolean) {
       if (this.storeMode === false) { this.storeMode = true; } else { this.storeMode = false; }
-    }
+    },
+    async getDb () {
+      return new Promise((resolve, reject) => {
+        const request = window.indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onerror = e => {
+          console.log('Error opening db', e);
+          reject('Error');
+        };
+
+        request.onsuccess = e => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          resolve(e.target.result);
+        };
+
+        request.onupgradeneeded = e => {
+          console.log('onupgradeneeded');
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          const db = e.target.result;
+          const objectStore = db.createObjectStore('bols', { autoIncrement: true, keyPath: 'id' });
+        };
+      });
+    },
+    async getBolsFromDb () {
+      return new Promise((resolve, reject) => {
+        const trans = this.db.transaction(['bols'], 'readonly');
+        trans.oncomplete = e => {
+          resolve(bols);
+        };
+
+        const store = trans.objectStore('bols');
+        const bols = [];
+
+        store.openCursor().onsuccess = e => {
+          const cursor = e.target.result;
+          if (cursor) {
+            bols.push(cursor.value);
+            cursor.continue();
+          }
+        };
+      });
+    },
+    async addBol () {
+      const bol = {
+        BolNumber: Math.floor(Math.random() * 100),
+        Gallons: Math.floor(Math.random() * 10) + 1
+      };
+      console.log('about to add ' + JSON.stringify(bol));
+      await this.addBolToDb(bol);
+      this.bols = await this.getBolsFromDb();
+    },
+    async addBolToDb (bol) {
+      return new Promise<void>((resolve, reject) => {
+        const trans = this.db.transaction(['bols'], 'readwrite');
+        trans.oncomplete = e => {
+          resolve();
+        };
+
+        const store = trans.objectStore('bols');
+        store.add(bol);
+      });
+    },
   },
   computed: {
     darkModeString: function () {
@@ -181,6 +246,12 @@ export default defineComponent({
     forceStoreModeString (): string {
       return this.storeMode ? 'Switch to Driver Mode' : 'Switch to Store Mode';
     }
+  },
+  async created () {
+    this.db = await this.getDb();
+    this.bols = await this.getBolsFromDb();
+    this.addBol();
+    this.ready = true;
   },
   provide () {
     return {
